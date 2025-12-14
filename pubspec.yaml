@@ -37,7 +37,7 @@ dependencies:
   image_picker: ^1.0.0
   path_provider: ^2.0.0
   path: ^1.8.0
-  edge_detection: ^1.1.2
+  edge_detection_updated: ^1.1.4
   permission_handler: ^11.0.0
 
   # The following adds the Cupertino Icons font to your application.
