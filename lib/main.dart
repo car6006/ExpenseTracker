@@ -100,6 +100,7 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'Expense Tracker',
+          debugShowCheckedModeBanner: false,
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeProvider.themeMode,
@@ -133,50 +134,60 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Welcome!', style: Theme.of(context).textTheme.displayLarge),
-              const SizedBox(height: 20),
-              Text('This is your expense tracker app.', style: Theme.of(context).textTheme.bodyMedium),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EnhancedScanner()),
-                  );
-                  if (result != null && result is Receipt) {
-                    receipts.value = [...receipts.value, result];
-                  }
-                },
-                icon: const Icon(Icons.document_scanner),
-                label: const Text('Scan Receipt'),
-              ),
-              const SizedBox(height: 30),
-              ValueListenableBuilder<List<Receipt>>(
-                valueListenable: receipts,
-                builder: (context, receiptList, child) {
-                  if (receiptList.isEmpty) {
-                    return Expanded(
-                      child: Center(
-                        child: Text(
-                          'No receipts yet.\nTap "Scan Receipt" to get started!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
+      body: Column(
+        children: [
+          // Header section
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Text(
+                  'Welcome!',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 42),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'This is your expense tracker app.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EnhancedScanner()),
                     );
-                  }
+                    if (result != null && result is Receipt) {
+                      receipts.value = [...receipts.value, result];
+                    }
+                  },
+                  icon: const Icon(Icons.document_scanner),
+                  label: const Text('Scan Receipt'),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          // Receipts list
+          Expanded(
+            child: ValueListenableBuilder<List<Receipt>>(
+              valueListenable: receipts,
+              builder: (context, receiptList, child) {
+                if (receiptList.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No receipts yet.\nTap "Scan Receipt" to get started!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+                }
 
-                  return Expanded(
-                    child: ListView.builder(
+                return ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       itemCount: receiptList.length,
                       itemBuilder: (context, index) {
@@ -297,11 +308,14 @@ class MyHomePage extends StatelessWidget {
                                                 color: Colors.grey[500],
                                               ),
                                               const SizedBox(width: 4),
-                                              Text(
-                                                DateFormat('MMM dd, yyyy').format(receipt.date),
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[600],
+                                              Flexible(
+                                                child: Text(
+                                                  DateFormat('MMM dd, yyyy').format(receipt.date),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -310,37 +324,42 @@ class MyHomePage extends StatelessWidget {
                                       ),
                                     ),
                                     // Right side - Total and Category
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          receipt.total.toStringAsFixed(2),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: colorScheme.primary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: colorScheme.tertiaryContainer.withOpacity(0.5),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Text(
-                                            receipt.category,
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            receipt.total.toStringAsFixed(2),
                                             style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w600,
-                                              color: colorScheme.onTertiaryContainer,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                              color: colorScheme.primary,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: colorScheme.tertiaryContainer.withOpacity(0.5),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Text(
+                                              receipt.category,
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w600,
+                                                color: colorScheme.onTertiaryContainer,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -349,14 +368,12 @@ class MyHomePage extends StatelessWidget {
                           ),
                         );
                       },
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 }
