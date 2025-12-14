@@ -3,9 +3,8 @@ import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:edge_detection/edge_detection.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -31,7 +30,7 @@ class _ReceiptScannerState extends State<ReceiptScanner> {
   Future<void> _initialize() async {
     await _requestPermissions();
     _initializeCamera();
-    _textRecognizer = GoogleMlKit.vision.textRecognizer();
+    _textRecognizer = TextRecognizer();
   }
 
   Future<void> _requestPermissions() async {
@@ -78,16 +77,11 @@ class _ReceiptScannerState extends State<ReceiptScanner> {
 
       if (!mounted) return;
 
-      bool success = await EdgeDetection.detectEdge(
-        imagePath,
-        canUseGallery: false,
-      );
-
-      if (success) {
-        setState(() {
-          _imagePath = imagePath;
-        });
-      }
+      setState(() {
+        _imagePath = imagePath;
+      });
+      
+      await _processImage(imagePath);
     } catch (e) {
       developer.log('Error scanning for receipt: $e');
     }
