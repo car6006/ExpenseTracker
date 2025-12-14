@@ -1,0 +1,59 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+gen/
+
+# Visual Studio Code
+.vscode/
+
+# Xcode
+.xcworkspace/
+build/
+DerivedData/
+*.hmap
+*.xccheckout
+*.xcscheme
+xcuserdata/
+
+# Android/IntelliJ
+.gradle/
+build/
+captures/
+local.properties
+/android/app/src/main/res/values/strings.xml
+
+# Android Studio
+.idea/
+*.iml
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+/build/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/engine
+/ios/Flutter/ephemeral
+/ios/Flutter/flutter_assets
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/.last_build_id
+
+# Dart
+.dart_tool/
+pubspec.lock
